@@ -14,6 +14,7 @@ public class MoveDetails {
        this.col = j;
         this.symbol = symbol;
     }
+    
 
     void setRow(int x) {
         this.row = x;

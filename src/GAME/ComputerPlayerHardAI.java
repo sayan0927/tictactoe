@@ -1,17 +1,18 @@
 package GAME;
 
 import javax.swing.*;
+import java.util.*;
 import java.util.concurrent.Semaphore;
 
 public class ComputerPlayerHardAI extends Player {
 
-    private final Character computerPlayer ;
-    private final Character humanPlayer ;
-    private final GameBoard mainGameBoard;
-    private GameBoard gameBoardForMoves; // this board is used to make moves by minimax, so that original board doesnt change
+    protected final Character computerPlayer ;
+    protected final Character humanPlayer ;
+    protected final GameBoard mainGameBoard;
+    protected GameBoard gameBoardForMoves; // this board is used to make moves by minimax, so that original board doesnt change
 
 
-    private final int gamesize;
+    protected final int gamesize;
 
 
     ComputerPlayerHardAI(Character computerPlayer, Character humanPlayer, boolean b, int gamesize, GameBoard gameBoard) {
@@ -32,7 +33,7 @@ public class ComputerPlayerHardAI extends Player {
     }
 
 
-   private int evaluate(GameBoard boardForMoves)  {
+   protected int evaluate(GameBoard boardForMoves)  {
 
 
 
@@ -84,8 +85,8 @@ public class ComputerPlayerHardAI extends Player {
 
 
 
-    private int minimax(GameBoard  boardForMoves, int depth, boolean isMax)  {
-
+    protected int minimax(GameBoard  boardForMoves, int depth, boolean isMax)  {
+        System.out.println("at depth "+depth);
         int score = evaluate(boardForMoves);
 
         if (score == 10)  // If Maximizer has won the game return his/her evaluated score
@@ -142,10 +143,11 @@ public class ComputerPlayerHardAI extends Player {
         }
     }
 
-   private MoveDetails findBestMove(GameBoard boardForMoves)  {
+   protected MoveDetails findBestMove(GameBoard boardForMoves)  {
         int bestVal = -1000;
-        MoveDetails bestMove = new MoveDetails(-1, -1, computerPlayer);
 
+
+        TreeMap<Integer, List<MoveDetails>> moveScores = new TreeMap<>();
 
         for (int i = 0; i < gamesize; i++)
         {
@@ -158,20 +160,29 @@ public class ComputerPlayerHardAI extends Player {
 
                     int moveVal = minimax(boardForMoves, 0, false);   // compute evaluation function for this move
 
+
+
+                    if(moveScores.containsKey(moveVal))
+                        moveScores.get(moveVal).add(new MoveDetails(i,j,computerPlayer));
+                    else
+                    {
+                        List<MoveDetails> set = new ArrayList<>();
+                        set.add(new MoveDetails(i,j,computerPlayer));
+                        moveScores.put(moveVal,set);
+                    }
+
                     boardForMoves.setCellValue(i,j,boardForMoves.empty_charecter);  // Undo the move
 
-                    if (moveVal > bestVal)  // If the value of the current move is more than the best value, then update best
-                    {
-
-                        bestMove.setRow(i);
-                        bestMove.setCol(j);
-                        bestVal = moveVal;
-                    }
                 }
             }
         }
 
-        return bestMove;
+        //returning a random move from the moves with top scores
+
+        List<MoveDetails> bestMoves = moveScores.lastEntry().getValue();
+       System.out.println("Moves "+bestMoves +"  "+moveScores);
+        int randIdx = new Random().nextInt(bestMoves.size());
+        return bestMoves.get(randIdx);
 
     }
 

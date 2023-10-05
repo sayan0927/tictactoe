@@ -50,6 +50,8 @@ public class GameController  {
             secondPlayer=new ComputerPlayerHardAI('O','X',false,game_size,this.gameBoard);
         else if(playing_against==3)
             secondPlayer=new HumanPlayer('O', true, game_size,gameWindow);
+        else if(playing_against==0)
+            secondPlayer=new ComputerPlayerMediumAI('O','X',false,game_size,this.gameBoard);
 
         moves_made = 0;
         game_ended = false;

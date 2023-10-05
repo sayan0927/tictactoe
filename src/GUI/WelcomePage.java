@@ -9,7 +9,7 @@ import java.util.concurrent.Semaphore;
 
 public class WelcomePage extends BaseFrame{
 
-    JButton playAgainstHuman,playAgainstHardAI, playAgainstEasyAi;
+    JButton playAgainstHuman,playAgainstHardAI, playAgainstEasyAi,getPlayAgainstMediumAi;
     int playingAgainst=-1;
 
     Semaphore semaphore;
@@ -38,9 +38,13 @@ public class WelcomePage extends BaseFrame{
         playAgainstEasyAi =new JButton("Play against AI (Easy)");
         playAgainstEasyAi.setBounds(200,400,200,100);
 
+        getPlayAgainstMediumAi =new JButton("Play against AI (Medium)");
+        getPlayAgainstMediumAi.setBounds(200,500,200,100);
+
         playAgainstHuman.addActionListener(this);
         playAgainstHardAI.addActionListener(this);
         playAgainstEasyAi.addActionListener(this);
+        getPlayAgainstMediumAi.addActionListener(this);
 
         lowerPanel=new ImagePanel(BaseFrame.yellowBackGroundImage,BaseFrame.windowSize);
         lowerPanel.setLayout(new BorderLayout());
@@ -64,6 +68,7 @@ public class WelcomePage extends BaseFrame{
        leftPanel.add(playAgainstHuman,BorderLayout.NORTH);
        leftPanel.add(playAgainstEasyAi,BorderLayout.CENTER);
        leftPanel.add(playAgainstHardAI,BorderLayout.SOUTH);
+       leftPanel.add(getPlayAgainstMediumAi,BorderLayout.AFTER_LAST_LINE);
 
     }
 
@@ -77,6 +82,8 @@ public class WelcomePage extends BaseFrame{
             playingAgainst=2;
         else if(e.getSource().equals(playAgainstEasyAi))
             playingAgainst=1;
+        else if (e.getSource().equals(getPlayAgainstMediumAi))
+            playingAgainst=0;
 
        // semaphore.release();
         this.setVisible(false);
